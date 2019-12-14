@@ -8,28 +8,7 @@ using namespace std;
 const auto nx = 2440;
 const auto ny = 2440;
 
-struct Coords { int x; int y;};
 struct Color { int r; int g; int b;};
-struct Star {
-	int x;
-	int y;
-	int size;
-};
-
-bool isInStarMap(int x, int y, vector<Star> stars) {
-	for (Star currentStar : stars) {
-		if (currentStar.x == x && currentStar.y == y) {
-			return true;
-		}
-	}
-	return false;
-}
-
-void renderStars(Color** screen, vector<Star> stars) {
-	for (Star currentStar: stars) {
-		screen[currentStar.x][currentStar.y] = { 255, 0, 0};
-	}
-}
 
 void renderCircle(Color** screen) {
 	int x, y, r2;
@@ -73,11 +52,6 @@ int main(int argc, char** argv) {
 		screen[i] = (Color *)malloc(ny * sizeof(Color));
 	}	
 	
-	vector<Star> stars;
-	stars.push_back({3,4});		
-	stars.push_back({7, 5});	
-	
-//	renderStars(screen, stars);	
 	cout << "P3" << endl;
 	cout << nx << " " << ny << endl;
 	cout << "255" << endl;
@@ -92,7 +66,6 @@ int main(int argc, char** argv) {
 			cx *= 254.9;
 			cy *= 254.9;
 			screen[x][y] = {0, 0, 0};	
-			//cout << int(cx) << " " << int(cy) << " " << 250 << endl;	
 		}
 	}
 	renderCircle(screen);	
