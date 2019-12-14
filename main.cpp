@@ -1,11 +1,12 @@
 #include <iostream>
+#include <cmath>
 #include <array>
 #include <vector>
 using namespace std;
 
 
-const auto nx = 1280;
-const auto ny = 1280;
+const auto nx = 2440;
+const auto ny = 2440;
 
 struct Coords { int x; int y;};
 struct Color { int r; int g; int b;};
@@ -27,6 +28,32 @@ bool isInStarMap(int x, int y, vector<Star> stars) {
 void renderStars(Color** screen, vector<Star> stars) {
 	for (Star currentStar: stars) {
 		screen[currentStar.x][currentStar.y] = { 255, 0, 0};
+	}
+}
+
+void renderCircle(Color** screen) {
+	int x, y, r2;
+	int radius = 1200;
+	r2 = radius * radius;
+	screen[nx / 2][(ny / 2) + radius] = {255,0,0};
+	screen[nx / 2][(ny / 2) - radius] = {255,0,0};
+	screen[(nx / 2) + radius][ny / 2] = {255,0,0};
+	screen[(nx / 2) - radius][ny / 2] = {255,0,0};
+	y = radius;
+  x = 1;
+	y = (int) (sqrt(r2 - 1) + 0.5);
+	
+	while (x < y) {
+		screen[(nx / 2) + x][(ny / 2) + y] = {255,0,0};
+		screen[(nx / 2) + x][(ny / 2) - y] = {255,0,0};
+		screen[(nx / 2) - x][(ny / 2) + y] = {255,0,0};
+		screen[(nx / 2) - x][(ny / 2) - y] = {255,0,0};
+		screen[(nx / 2) + y][(ny / 2) + x] = {255,0,0};
+		screen[(nx / 2) + y][(ny / 2) - x] = {255,0,0};
+		screen[(nx / 2) - y][(ny / 2) + x] = {255,0,0};
+		screen[(nx / 2) - y][(ny / 2) - x] = {255,0,0};
+		x += 1;
+		y = (int) (sqrt(r2 - x * x) + 0.5);
 	}
 }
 
@@ -64,11 +91,11 @@ int main(int argc, char** argv) {
 
 			cx *= 254.9;
 			cy *= 254.9;
-			screen[x][y] = {(int)cx, (int)cy};	
+			screen[x][y] = {0, 0, 0};	
 			//cout << int(cx) << " " << int(cy) << " " << 250 << endl;	
 		}
 	}
-	
+	renderCircle(screen);	
 	drawScreen(screen);
 	return 0;
 }

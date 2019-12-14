@@ -1,5 +1,5 @@
 C=g++
-CFLAGS=-Wall -o
+CFLAGS=-Wall -g -o
 SRC=main.cpp
 OUT=main
 
