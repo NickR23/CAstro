@@ -1,1 +1,1 @@
-starProjection(float ra, float dec);
+void starProjection(float ra, float dec);
