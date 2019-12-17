@@ -2,10 +2,14 @@
 #include <cmath>
 using namespace std;
 
+#define PI 3.14159265
+
 void starProjection(float ra, float dec) {
-	float x = cos(ra) * sin(dec);
-	float y = sin(ra);
-	float z = cos(ra) * cos(dec);
+	ra = ra * PI / 180;
+	dec = dec * PI / 180;	
+	float x = cos(dec) * sin(ra);
+	float y = sin(dec);
+	float z = cos(dec) * cos(ra);
 	
 	float xProj = x / (1.0 + z);
 	float yProj = y / (1.0 + z);	
