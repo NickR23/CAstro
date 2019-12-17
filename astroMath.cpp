@@ -22,37 +22,42 @@ std::string gsfb(char * s, int begin, int end) {
 	return stringFromBytes;
 }
 
-void parseLine(char * buffer) {
+void parseLine(std::string buffer) {
 	Star star = {};
 	// get  id
-	std::string idString = gsfb(buffer, 1, 6);
+	std::string idString = buffer.substr(0,6);
 	star.id = idString;
 	std::cout << "ID: " << star.id  << " ";
 	// get right ascension
-	std::string raString = gsfb(buffer, 16, 28);
+	std::string raString = buffer.substr(15,28);
 	star.ra = std::stof(raString);
 	std::cout << "RA: " << star.ra << " ";
 	// get declination	
-	std::string decString = gsfb(buffer, 30, 42);
+	std::string decString = buffer.substr(29, 42);
 	star.dec = std::stof(decString);
+	std::cout << "TEST: " << decString << " ";
 	std::cout << "DEC: " << star.dec << std::endl;	
 }
 
 void readCatalog() {
 	std::ifstream is("./data/test.dat", std::ifstream::binary);
 	int length = 0;
+	std::string bf;
+	while (std::getline(is, bf) ){
+		parseLine(bf);	
+	}
 	if (is) {
 		is.seekg(0, is.end);
 		length = is.tellg();
 		is.seekg(0, is.beg);
-	
-		char * buffer = new char [276];
+			char * buffer = new char [276];
+			is.read (buffer, 276);
+			parseLine(buffer);
 
-		is.read (buffer, 276);
+			delete[] buffer;
+		
 		is.close();
 		
-		parseLine(buffer);
-		delete[] buffer;
 	}
 }
 
