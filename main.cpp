@@ -49,7 +49,7 @@ void drawScreen(Color** screen)	{
 void renderStars(Color** screen, vector<Star> stars) {
 	for (Star star : stars) {
 		//cout << "X: " << star.x << " Y: " << star.y << endl;
-		screen[star.x][star.y] = {0, 0, 255};
+		screen[star.x][star.y] = {255, 255, 255};
 	}
 }
 
