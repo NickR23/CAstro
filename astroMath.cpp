@@ -3,67 +3,41 @@
 #include <cmath>
 #include <vector>
 #include <string>
+#include "astroMath.h"
 #define PI 3.14159265
 
-struct Star {
-	std::string id;
-	float ra;
-	float dec;
-};
-
-/**
- * Gets a string from a byte range.
- */
-std::string gsfb(char * s, int begin, int end) {
-	std::string stringFromBytes;
-	for (auto i = begin; i < end; i++ ) {
-		stringFromBytes += s[i];
-	}
-	return stringFromBytes;
-}
-
-void parseLine(std::string buffer) {
+Star parseLine(std::string buffer) {
 	Star star = {};
 	// get  id
 	std::string idString = buffer.substr(0,6);
 	star.id = idString;
-	std::cout << "ID: " << star.id  << " ";
+	
 	// get right ascension
-	std::string raString = buffer.substr(15,28);
-	star.ra = std::stof(raString);
-	std::cout << "RA: " << star.ra << " ";
+	std::string raString = buffer.substr(15,13);
+	star.ra = std::stold(raString);
+	
 	// get declination	
-	std::string decString = buffer.substr(29, 42);
-	star.dec = std::stof(decString);
-	std::cout << "TEST: " << decString << " ";
-	std::cout << "DEC: " << star.dec << std::endl;	
+	std::string decString = buffer.substr(29, 13);
+	star.dec = std::stold(decString);
+	
+	return star;
 }
 
-void readCatalog() {
-	std::ifstream is("./data/test.dat", std::ifstream::binary);
-	int length = 0;
+std::vector<Star> readCatalog() {
+	std::ifstream is("./data/hip2.dat", std::ifstream::binary);
 	std::string bf;
+	std::vector<Star> stars;
 	while (std::getline(is, bf) ){
-		parseLine(bf);	
+		stars.push_back(parseLine(bf));
 	}
-	if (is) {
-		is.seekg(0, is.end);
-		length = is.tellg();
-		is.seekg(0, is.beg);
-			char * buffer = new char [276];
-			is.read (buffer, 276);
-			parseLine(buffer);
-
-			delete[] buffer;
-		
-		is.close();
-		
-	}
+	is.close();
+	return stars;	
 }
 
-void starProjection(float ra, float dec) {
-	ra = ra * PI / 180;
-	dec = dec * PI / 180;	
+
+void starProjection(Star &star) {
+	float ra = star.ra * PI / 180;
+	float dec = star.dec * PI / 180;	
 	float x = cos(dec) * sin(ra);
 	float y = sin(dec);
 	float z = cos(dec) * cos(ra);
@@ -71,9 +45,14 @@ void starProjection(float ra, float dec) {
 	float xProj = x / (1.0 + z);
 	float yProj = y / (1.0 + z);	
 	
-	std::cout << "x'  " << x << std::endl;
-	std::cout << "y'  " << y << std::endl;
-	std::cout << "z'  " << z << std::endl;
-	std::cout << std::endl << "X  " << xProj << std::endl;
-	std::cout << "Y  " << yProj << std::endl;
+	double minDec = -1.567;
+	double maxDec = 1.56328;
+	double minRa = 1.59148e-05;
+	double maxRa = 6.28282;
+	double normX = (star.dec - (minDec)) / (maxDec - (minDec));
+	normX *= 1279;
+	double normY = (star.ra - (minRa)) / (maxRa - (minRa));
+	normY *= 1279;
+	star.x = normX;
+	star.y = normY;
 }	
