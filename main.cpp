@@ -2,11 +2,12 @@
 #include <cmath>
 #include <array>
 #include <vector>
+#include <limits>
+#include "astroMath.h"
 using namespace std;
 
-
-const auto nx = 2440;
-const auto ny = 2440;
+const auto nx = 1280;
+const auto ny = 1280;
 
 struct Color { int r; int g; int b;};
 
@@ -45,30 +46,31 @@ void drawScreen(Color** screen)	{
 	}
 }
 
+void renderStars(Color** screen, vector<Star> stars) {
+	for (Star star : stars) {
+		//cout << "X: " << star.x << " Y: " << star.y << endl;
+		screen[star.x][star.y] = {0, 0, 255};
+	}
+}
+
 int main(int argc, char** argv) {
-	//Initiallize screen
 	Color **screen = (Color **) malloc(nx * sizeof(Color *));
 	for (auto i = 0; i < nx; i++) {
 		screen[i] = (Color *)malloc(ny * sizeof(Color));
-	}	
-	
+	}
+
 	cout << "P3" << endl;
 	cout << nx << " " << ny << endl;
 	cout << "255" << endl;
-		
-		
-	for (int x = 0; x < nx; x++) {
-		for (int y = 0; y < ny; y++) {
-		
-			float cx = float(x) / float(nx);
-			float cy = float(y) / float(ny);
 
-			cx *= 254.9;
-			cy *= 254.9;
-			screen[x][y] = {0, 0, 0};	
-		}
+	vector<Star> stars = readCatalog();
+	
+	for (auto i = 0; i < stars.size(); i++) {
+		Star star = stars.at(i);
+		starProjection(star);
+		stars.at(i) = star;
 	}
-	renderCircle(screen);	
+
+	renderStars(screen, stars);
 	drawScreen(screen);
-	return 0;
 }
