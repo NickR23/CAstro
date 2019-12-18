@@ -7,10 +7,10 @@ OBJECTS=main.o astroMath.o
 output: $(OBJECTS)
 	$(C) $(CFLAGS) $(OBJECTS) -o main
 
-main.o: $(SRC)
+main.o: $(SRC) imageFormat.h
 	$(C) -c $(SRC)
 
-astroMath.o: astroMath.cpp astroMath.h
+astroMath.o: astroMath.cpp astroMath.h imageFormat.h
 	$(C) -c astroMath.cpp
 
 clean:
